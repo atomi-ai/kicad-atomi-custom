@@ -108,6 +108,11 @@ D RTL8211E
 K QFN48 GbE Tranceiver RGMII
 $ENDCMP
 #
+$CMP RollerEncoder
+D RollerEncoder with push switch
+K Encoder Roller Panasonic
+$ENDCMP
+#
 $CMP SODIMM_204
 D SODIMM
 K SODIMM DDR3
