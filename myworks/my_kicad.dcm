@@ -1,0 +1,166 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP +1V05
+K POWER, PWR
+$ENDCMP
+#
+$CMP +1V05A
+K POWER, PWR
+$ENDCMP
+#
+$CMP A3P060
+D FPGA
+K Actel, FPGA, ProASIC3
+$ENDCMP
+#
+$CMP AD7705
+D 16bit 2channel differential ADC
+K ADC Differential 16bit
+$ENDCMP
+#
+$CMP ANTPCB
+D ANTPCB
+K Antenna
+$ENDCMP
+#
+$CMP BQ25895
+D Battery Charge
+K MaxCharge QC2.0 PumpExpress
+$ENDCMP
+#
+$CMP CRYSTAL_SMT
+D CRYSTAL_SMT
+K CRYSTAL SMT
+$ENDCMP
+#
+$CMP Coiltronics
+D Transformer
+K Coiltronics
+$ENDCMP
+#
+$CMP DA14580-QFN40
+D BLE
+K BLE with MCU
+$ENDCMP
+#
+$CMP EPCS16
+D EPCS16
+K EPCS16 FPGA ALTERA CONFIG CHIP
+$ENDCMP
+#
+$CMP EPM240T100
+D CPLD
+K EPM240T100
+$ENDCMP
+#
+$CMP FP6291
+D Step-Up Converter
+K 1MHz, 2.5A, Li-Ion Battery
+$ENDCMP
+#
+$CMP FP6601
+D QC2.0 Protocol
+K USB Dedicated Charing Port Controller with QC2.0
+$ENDCMP
+#
+$CMP FP6717
+D Sync Step-Up
+K 3.1A, 550KHz, Step-Up converter
+$ENDCMP
+#
+$CMP HR911130A
+D HR911130A
+K RJ45 GbE TRs
+$ENDCMP
+#
+$CMP MP2467
+D Step-Down Converter
+K 2.5A, 6-36V, 500kHZ, Step-Down Converter
+$ENDCMP
+#
+$CMP MPR121QR2
+D Touch Sensor Controller
+K Proximity Capative Touch Sensor Controller
+$ENDCMP
+#
+$CMP NE5532
+D Dual OP
+K Dual Low-Noise OP
+$ENDCMP
+#
+$CMP NT6008
+D USB Charge Port Protocol
+K QC3.0, BC1.2, Apple
+$ENDCMP
+#
+$CMP OLED-12864
+D Screen
+K OLED, 12864
+$ENDCMP
+#
+$CMP OSCILLATOR
+D Oscillator
+K Oscillator
+$ENDCMP
+#
+$CMP RTL8211E-VB
+D RTL8211E
+K QFN48 GbE Tranceiver RGMII
+$ENDCMP
+#
+$CMP SODIMM_204
+D SODIMM
+K SODIMM DDR3
+$ENDCMP
+#
+$CMP STM8S003F3
+D 8bit-MCU
+K STM8 QFN20
+$ENDCMP
+#
+$CMP T3027NL
+D Transformer
+K T3027NL,40uH
+$ENDCMP
+#
+$CMP TL431
+D Reference
+K Precision Programmable Reference
+$ENDCMP
+#
+$CMP TPS61088
+D Sync Boost Converter
+K Fully-Integrated Sync Boost Converter
+$ENDCMP
+#
+$CMP TagConnect
+D Connector
+K TagConnector 2030-NL
+$ENDCMP
+#
+$CMP USBLC6
+D USBLC6
+K USBLC6 ESD
+$ENDCMP
+#
+$CMP USB_A_flipable
+D USB type A
+K USB type A with flipable
+$ENDCMP
+#
+$CMP W25Q
+D SPI FLASH
+K SPI Flash
+$ENDCMP
+#
+$CMP nRF24L01
+D 2.4G Transceiver
+K 2.4G Transceiver
+$ENDCMP
+#
+$CMP nRF24LU1+
+D 2.4G Transceiver with MCU
+K 2.4G Transceiver with MCU
+$ENDCMP
+#
+#End Doc Library
