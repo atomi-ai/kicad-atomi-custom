@@ -8,9 +8,19 @@ $CMP +1V05A
 K POWER, PWR
 $ENDCMP
 #
+$CMP 74LVC4245
+D Octal dual supply translating transceiver; 3-state
+K level shift transceiver 3.3 5
+$ENDCMP
+#
 $CMP A3P060
 D FPGA
 K Actel, FPGA, ProASIC3
+$ENDCMP
+#
+$CMP ACDC
+D 220AC 12VDC converter HA12N20-2539
+K ACDC 220 12 HIECUBE
 $ENDCMP
 #
 $CMP AD7705
@@ -41,6 +51,11 @@ $ENDCMP
 $CMP DA14580-QFN40
 D BLE
 K BLE with MCU
+$ENDCMP
+#
+$CMP DCDC
+D Adjustable DCDC buck converter
+K DCDC buck converter
 $ENDCMP
 #
 $CMP EPCS16
@@ -111,6 +126,11 @@ $ENDCMP
 $CMP RollerEncoder
 D RollerEncoder with push switch
 K Encoder Roller Panasonic
+$ENDCMP
+#
+$CMP RotateEncoder
+D Rotate Encoder with switch
+K Switch Encoder Rotate
 $ENDCMP
 #
 $CMP SODIMM_204
