@@ -23,6 +23,11 @@ D 220AC 12VDC converter HA12N20-2539
 K ACDC 220 12 HIECUBE
 $ENDCMP
 #
+$CMP ACDC-dual
+D 220AC dual 12VDC converter HA12N20-2539
+K ACDC 220 12 HIECUBE dual
+$ENDCMP
+#
 $CMP AD7705
 D 16bit 2channel differential ADC
 K ADC Differential 16bit
