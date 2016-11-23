@@ -6,7 +6,13 @@
   (fp_text value SolderWirePad_3x_1-2mmDrill (at 1.27 3.81) (layer F.Fab)
     (effects (font (size 1 1) (thickness 0.15)))
   )
+<<<<<<< HEAD
   (pad 1 thru_hole circle (at -3.81 0) (size 2.99974 2.99974) (drill 1.19888) (layers *.Cu *.Mask F.SilkS))
   (pad 1 thru_hole circle (at 0 0) (size 2.99974 2.99974) (drill 1.19888) (layers *.Cu *.Mask F.SilkS))
   (pad 1 thru_hole circle (at 3.81 0) (size 2.99974 2.99974) (drill 1.19888) (layers *.Cu *.Mask F.SilkS))
+=======
+  (pad 1 thru_hole circle (at -3.81 0) (size 2.99974 2.99974) (drill 1.19888) (layers *.Cu *.Mask))
+  (pad 1 thru_hole circle (at 0 0) (size 2.99974 2.99974) (drill 1.19888) (layers *.Cu *.Mask))
+  (pad 1 thru_hole circle (at 3.81 0) (size 2.99974 2.99974) (drill 1.19888) (layers *.Cu *.Mask))
+>>>>>>> 23a2c7db706714d275d6fbe9b06c7618e382c452
 )

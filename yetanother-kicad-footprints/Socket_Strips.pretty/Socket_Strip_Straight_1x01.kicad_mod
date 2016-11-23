@@ -15,7 +15,11 @@
   (fp_line (start -1.55 -1.55) (end 0 -1.55) (layer F.SilkS) (width 0.15))
   (fp_line (start -1.55 -1.55) (end -1.55 1.55) (layer F.SilkS) (width 0.15))
   (fp_line (start -1.55 1.55) (end 0 1.55) (layer F.SilkS) (width 0.15))
+<<<<<<< HEAD
   (pad 1 thru_hole rect (at 0 0) (size 2.2352 2.2352) (drill 1.016) (layers *.Cu *.Mask F.SilkS))
+=======
+  (pad 1 thru_hole rect (at 0 0) (size 2.2352 2.2352) (drill 1.016) (layers *.Cu *.Mask))
+>>>>>>> 23a2c7db706714d275d6fbe9b06c7618e382c452
   (model Socket_Strips.3dshapes/Socket_Strip_Straight_1x01.wrl
     (at (xyz 0 0 0))
     (scale (xyz 1 1 1))
