@@ -21,7 +21,7 @@ class KiCAD_PCB:
 
     def write_bom(self, bom, filename):
         with open(filename, 'w') as f:
-            f.write("Commenct,Designator,Footprint,Pins,Quantity\n")
+            f.write("Comment,Designator,Footprint,Pins,Quantity\n")
             for key, value in bom.iteritems():
                 val, package = key
                 refs = [x[0] for x in value]
