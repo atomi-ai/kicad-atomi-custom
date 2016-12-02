@@ -15,9 +15,9 @@ checked = False
 class KiCAD_PCB:
     def __init__(self, filename):
         self.ast = self._parsePCB(filename)
-        coordiate, bom = self.generate_coordinate_and_bom(self.ast)
+        coordinate, bom = self.generate_coordinate_and_bom(self.ast)
         self.write_bom(bom, "SMT_BOM.csv")
-        self.write_coordiate(coordiate, "SMT_Coordinate.csv")
+        self.write_coordinate(coordinate, "SMT_Coordinate.csv")
 
     def write_bom(self, bom, filename):
         with open(filename, 'w') as f:
@@ -27,13 +27,13 @@ class KiCAD_PCB:
                 refs = [x[0] for x in value]
                 f.write('{},"{}",{},{},{}\n'.format(val, ','.join(refs), package, x[1], len(value)))
 
-    def write_coordiate(self, coordiate, filename):
+    def write_coordinate(self, coordinate, filename):
         with open(filename, 'w') as f:
             f.write("Designator,Footprint,Mid X, Mid Y,Layer,Rotation\n")
-            f.write("\n".join(coordiate))
+            f.write("\n".join(coordinate))
 
     def generate_coordinate_and_bom(self, ast):
-        coordiate = []
+        coordinate = []
         bom = defaultdict(list)
         for i in ast[0]:
             token = i[0]
@@ -59,15 +59,15 @@ class KiCAD_PCB:
                         package = footprint_suffix
 
                 if package:
-                    coordiate.append("{ref},{footprint},{x}mm,{y}mm,{layer},{rotation}".format(
+                    coordinate.append("{ref},{footprint},{x}mm,{y}mm,{layer},{rotation}".format(
                         ref=reference, footprint=package,
-                        x=float(x) - origin_x,
-                        y=float(y) - origin_y,
+                        x=float(x),
+                        y=-float(y),
                         layer='T' if layer[0] == 'F' else 'B',
                         rotation=r))
                     bom[(value, package)].append((reference, 2))
 
-        return coordiate, bom
+        return coordinate, bom
 
     def pick(self, lst, *attribute_names):
         attr_pool = defaultdict(list)
