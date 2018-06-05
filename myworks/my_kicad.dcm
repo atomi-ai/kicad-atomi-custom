@@ -8,6 +8,15 @@ $CMP +1V05A
 K POWER, PWR
 $ENDCMP
 #
+$CMP 74LVC07A
+D Voltage Level shifter
+K Level Shifter Cheap
+$ENDCMP
+#
+$CMP 74LVC1G34
+D Buffer
+$ENDCMP
+#
 $CMP 74LVC4245
 D Octal dual supply translating transceiver; 3-state
 K level shift transceiver 3.3 5
@@ -16,6 +25,11 @@ $ENDCMP
 $CMP A3P060
 D FPGA
 K Actel, FPGA, ProASIC3
+$ENDCMP
+#
+$CMP A4983
+D Step motor driver module
+K step motor driver
 $ENDCMP
 #
 $CMP ACDC
@@ -58,6 +72,16 @@ D Transformer
 K Coiltronics
 $ENDCMP
 #
+$CMP CycloneIV-E15-F17
+D Cyclone IV E E15 F17
+K CycloneIV E15 F17
+$ENDCMP
+#
+$CMP CycloneV-5CEB-A9-F23
+D Cyclone V E A9 F23
+K CycloneV A9 F23
+$ENDCMP
+#
 $CMP DA14580-QFN40
 D BLE
 K BLE with MCU
@@ -66,6 +90,11 @@ $ENDCMP
 $CMP DCDC
 D Adjustable DCDC buck converter
 K DCDC buck converter
+$ENDCMP
+#
+$CMP EPCQ256ASx4
+D EPCQ256 ASx4
+K EPCQ256 ASx4 FPGA ALTERA CONFIG EPCQ64 EPCQ128 EPCQ512
 $ENDCMP
 #
 $CMP EPCS1/4/16
@@ -83,6 +112,11 @@ D CPLD
 K EPM240T100
 $ENDCMP
 #
+$CMP ESP-32
+D ESP32 wifi bluetooth module
+K ESP32
+$ENDCMP
+#
 $CMP FP6291
 D Step-Up Converter
 K 1MHz, 2.5A, Li-Ion Battery
@@ -98,9 +132,29 @@ D Sync Step-Up
 K 3.1A, 550KHz, Step-Up converter
 $ENDCMP
 #
+$CMP FT601
+D Usb3.0 FIFO to USB3.0
+K USB3.0 FIFO
+$ENDCMP
+#
+$CMP FT602
+D FIFO to USB3.1
+K FT602 USB3.1 FIFO
+$ENDCMP
+#
 $CMP HR911130A
 D HR911130A
 K RJ45 GbE TRs
+$ENDCMP
+#
+$CMP HR911196A
+D HR911196A
+K RJ45 GbE TRs POE
+$ENDCMP
+#
+$CMP IP2716
+D TypeC PD3.0 QC3.0 Protocol Controller
+K TypeC PD Protocol Controller
 $ENDCMP
 #
 $CMP IS61WV25616
@@ -111,6 +165,16 @@ $ENDCMP
 $CMP IS61WV5128
 D SRAM 512K x8bit
 K SRAM 5128
+$ENDCMP
+#
+$CMP L9110S
+D Motor control
+K H Bridge Motor Control
+$ENDCMP
+#
+$CMP MP2307
+D Sync rectified Step-Down Converter 
+K 3A, 4.7-23V, 340kHZ, Step-Down Converter, Sync rectified
 $ENDCMP
 #
 $CMP MP2467
@@ -158,6 +222,11 @@ D Rotate Encoder with switch
 K Switch Encoder Rotate
 $ENDCMP
 #
+$CMP SI3402-B
+D 802.3-compliant PoE PD Interface and Switching Regulator
+K POE
+$ENDCMP
+#
 $CMP SODIMM_204
 D SODIMM
 K SODIMM DDR3
@@ -176,6 +245,11 @@ $ENDCMP
 $CMP TL431
 D Reference
 K Precision Programmable Reference
+$ENDCMP
+#
+$CMP TPS61040
+D Low-Power DC-DC Boost Converter in SOT-23
+K Boost
 $ENDCMP
 #
 $CMP TPS61088
@@ -201,6 +275,11 @@ $ENDCMP
 $CMP W25Q
 D SPI FLASH
 K SPI Flash
+$ENDCMP
+#
+$CMP mini-pci-124-custom
+D minipci custom connector 124p
+K minipci connector
 $ENDCMP
 #
 $CMP nRF24L01
