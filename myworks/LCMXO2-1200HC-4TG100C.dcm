@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LCMXO2-1200HC-4TG100C
+D FPGA - Field Programmable Gate Array 1280 LUTs 80 I/O 3.3V -4 SPD
+K
+F https://componentsearchengine.com/Datasheets/1/LCMXO2-1200HC-4TG100C.pdf
+$ENDCMP
+#
+#End Doc Library

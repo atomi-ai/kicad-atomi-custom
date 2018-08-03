@@ -177,6 +177,11 @@ D Motor control
 K H Bridge Motor Control
 $ENDCMP
 #
+$CMP LCMXO2-1200HC-4TG100C
+D FPGA - Field Programmable Gate Array 1280 LUTs 80 I/O 3.3V -4 SPD
+F https://componentsearchengine.com/Datasheets/1/LCMXO2-1200HC-4TG100C.pdf
+$ENDCMP
+#
 $CMP MP2307
 D Sync rectified Step-Down Converter
 K 3A, 4.7-23V, 340kHZ, Step-Down Converter, Sync rectified
@@ -215,6 +220,11 @@ $ENDCMP
 $CMP OSCILLATOR
 D Oscillator
 K Oscillator
+$ENDCMP
+#
+$CMP OV9281
+D OV9281 720p@120fps, 480p@210fps, Global shutter CMOS sensor
+K Global Shutter, CMOS Sensor
 $ENDCMP
 #
 $CMP RTL8211E-VB
