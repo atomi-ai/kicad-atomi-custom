@@ -1,5 +1,9 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP +0V75
+K POWER, PWR
+$ENDCMP
+#
 $CMP +1V05
 K POWER, PWR
 $ENDCMP
@@ -67,6 +71,10 @@ D CRYSTAL_SMT
 K CRYSTAL SMT
 $ENDCMP
 #
+$CMP C_pack04
+D capacitor array
+$ENDCMP
+#
 $CMP Coiltronics
 D Transformer
 K Coiltronics
@@ -127,6 +135,11 @@ D ESP32 wifi bluetooth module
 K ESP32
 $ENDCMP
 #
+$CMP F1C100s
+D ARM9 @900MHz with 32MB DDR2
+K ARM9 MCU
+$ENDCMP
+#
 $CMP FP6291
 D Step-Up Converter
 K 1MHz, 2.5A, Li-Ion Battery
@@ -175,6 +188,11 @@ $ENDCMP
 $CMP IS61WV5128
 D SRAM 512K x8bit
 K SRAM 5128
+$ENDCMP
+#
+$CMP K210
+D Kendryte K210 AI chip, 400MHz RISC-V dual CPU and 0.2T KPU
+K AI
 $ENDCMP
 #
 $CMP L9110S
