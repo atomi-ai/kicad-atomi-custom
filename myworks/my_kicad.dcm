@@ -195,6 +195,11 @@ D Kendryte K210 AI chip, 400MHz RISC-V dual CPU and 0.2T KPU
 K AI
 $ENDCMP
 #
+$CMP K210Core
+D DAN, K210 Core board
+K AI chip module
+$ENDCMP
+#
 $CMP L9110S
 D Motor control
 K H Bridge Motor Control
