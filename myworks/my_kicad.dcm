@@ -130,6 +130,11 @@ D CPLD
 K EPM240T100
 $ENDCMP
 #
+$CMP EPM3032A
+D MAX 3000A CPLD
+K CPLD Altera TQFP44
+$ENDCMP
+#
 $CMP ESP-32
 D ESP32 wifi bluetooth module
 K ESP32
@@ -170,6 +175,11 @@ D USB2.0 Hub Controller
 K USB Hub
 $ENDCMP
 #
+$CMP HEDS-9731
+D Small Optical Encoder Modules
+K HEDS-973x
+$ENDCMP
+#
 $CMP HR911130A
 D HR911130A
 K RJ45 GbE TRs
@@ -205,6 +215,11 @@ D DAN, K210 Core board
 K AI chip module
 $ENDCMP
 #
+$CMP KE-2N19F-30
+D Optical encoder replacement for HEDS9731
+K Optical encoder
+$ENDCMP
+#
 $CMP L9110S
 D Motor control
 K H Bridge Motor Control
@@ -223,6 +238,11 @@ $ENDCMP
 $CMP MP2467
 D Step-Down Converter
 K 2.5A, 6-36V, 500kHZ, Step-Down Converter
+$ENDCMP
+#
+$CMP MP2494
+D 2A, 55V, 100kHz STEP-DOWN CONVERTER
+K Buck converter MP2494
 $ENDCMP
 #
 $CMP MP3302
@@ -303,6 +323,11 @@ $ENDCMP
 $CMP TL431
 D Reference
 K Precision Programmable Reference
+$ENDCMP
+#
+$CMP TMC4671
+D FOC Sevro Controoler
+K FOC sevro
 $ENDCMP
 #
 $CMP TPS61040
