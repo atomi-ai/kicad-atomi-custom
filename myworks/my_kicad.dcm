@@ -280,6 +280,11 @@ D OV9281 720p@120fps, 480p@210fps, Global shutter CMOS sensor
 K Global Shutter, CMOS Sensor
 $ENDCMP
 #
+$CMP PMW3360
+D PMW3360 Optical Gaming Navigation Chip, 12000fps, 250ips, 12000 CPI
+K Mouse Sensor
+$ENDCMP
+#
 $CMP RTL8211E-VB
 D RTL8211E
 K QFN48 GbE Tranceiver RGMII
@@ -363,6 +368,11 @@ $ENDCMP
 $CMP mini-pci-124-custom
 D minipci custom connector 124p
 K minipci connector
+$ENDCMP
+#
+$CMP nRF24E1
+D 2.4GHz RF transceiver with embedded 8051 compatible micro-controller and 9 input, 10 bit ADC
+K 2.4G RF transceiver 8051
 $ENDCMP
 #
 $CMP nRF24L01
