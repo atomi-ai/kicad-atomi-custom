@@ -71,6 +71,11 @@ D CRYSTAL_SMT
 K CRYSTAL SMT
 $ENDCMP
 #
+$CMP CXA4008ER
+D The CXA4008ER is MEMS sensing and driver IC for Laser Beam scanning type Laser Projector
+K MEMS Laser beam scanning
+$ENDCMP
+#
 $CMP C_pack04
 D capacitor array
 $ENDCMP
@@ -385,9 +390,8 @@ D 2.4G Transceiver
 K 2.4G Transceiver
 $ENDCMP
 #
-$CMP nRF24LU1+
-D 2.4G Transceiver with MCU
-K 2.4G Transceiver with MCU
+$CMP nRF24LE1-QFN32
+D Ultra-low Power Wireless System On-Chip
 $ENDCMP
 #
 #End Doc Library
