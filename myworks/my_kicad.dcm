@@ -200,6 +200,11 @@ D TypeC PD3.0 QC3.0 Protocol Controller
 K TypeC PD Protocol Controller
 $ENDCMP
 #
+$CMP IRL6372PBF
+D 30V Dual N-Channel Low Logic Level HEXFET Power MOSFET in a SO-8 Lead-Free package
+K NMOS
+$ENDCMP
+#
 $CMP IS61WV25616
 D SRAM 256K x16bit
 K SRAM 25616
