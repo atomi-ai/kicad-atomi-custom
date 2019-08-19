@@ -1,0 +1,17 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP CapDisplacementMeasure
+D Capacitve Displacement Sensor, 3V, I2C
+K TM-003
+$ENDCMP
+#
+$CMP HVAMP
+D 100V amp
+$ENDCMP
+#
+$CMP VoltageRef
+D 7V VoltageRef Module
+K LM399 LTZ1000
+$ENDCMP
+#
+#End Doc Library
