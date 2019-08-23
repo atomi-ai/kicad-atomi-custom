@@ -9,6 +9,10 @@ $CMP HVAMP
 D 100V amp
 $ENDCMP
 #
+$CMP MultiSourceMeter
+D MultiMeter & PowerSource
+$ENDCMP
+#
 $CMP VoltageRef
 D 7V VoltageRef Module
 K LM399 LTZ1000

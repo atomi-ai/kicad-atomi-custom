@@ -54,6 +54,11 @@ $CMP LTC2400
 D 24-Bit µPower
 $ENDCMP
 #
+$CMP MAX6610AUT
+D Precision, Low-Power, 6-Pin SOT23
+ Temperature Sensors and Voltage References
+$ENDCMP
+#
 $CMP ST7789-1.3
 D 1.3inch 240x240 IPS LCD, SPI Interface, PCB solder
 K LCD IPS
