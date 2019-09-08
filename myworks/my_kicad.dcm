@@ -70,4 +70,14 @@ $CMP MAX6610AUT
 D Precision, Low-Power, 6-Pin SOT23
 $ENDCMP
 #
+$CMP OP200GSZ
+D 16 lead SOIC
+$ENDCMP
+#
+$CMP Transformer_SP_1S
+D Transformer, split primary, single secondary
+K transformer coil magnet
+F ~
+$ENDCMP
+#
 #End Doc Library
