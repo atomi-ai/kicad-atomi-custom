@@ -13,6 +13,10 @@ $CMP MultiSourceMeter
 D MultiMeter & PowerSource
 $ENDCMP
 #
+$CMP PowerBoard
+D +-15V, +-48V, 5V output
+$ENDCMP
+#
 $CMP VoltageRef
 D 7V VoltageRef Module
 K LM399 LTZ1000
