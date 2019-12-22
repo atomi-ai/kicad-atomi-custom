@@ -50,6 +50,12 @@ $CMP AD5541
 D 2.7 V to 5.5 V, Serial-Input,
 $ENDCMP
 #
+$CMP G2R-1-E
+D Omron G2R relay, Miniature Single Pole, SPDT, 16A
+K Miniature Single Pole Relay
+F https://www.omron.com/ecb/products/pdf/en-g5q.pdf
+$ENDCMP
+#
 $CMP LD_1310nm
 D Laser diodo, 1310nm, Vop:1.05V, Iop:16mA
 $ENDCMP
