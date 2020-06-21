@@ -80,6 +80,12 @@ $CMP OP200GSZ
 D 16 lead SOIC
 $ENDCMP
 #
+$CMP TMP117
+D Temperature Sensor with I2C/SMBus Interface, SOT-23-6
+K temperature sensor i2c smbus
+F http://www.ti.com/lit/gpn/tmp101
+$ENDCMP
+#
 $CMP Transformer_SP_1S
 D Transformer, split primary, single secondary
 K transformer coil magnet
