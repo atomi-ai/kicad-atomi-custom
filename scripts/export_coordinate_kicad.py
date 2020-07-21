@@ -23,7 +23,6 @@ export_layer_ids = [layertable[x] for x in export_layers]
 
 bb = board.ComputeBoundingBox()
 
-
 skip_pkg = ['tht', 'conn', 'jumper', 'mountinghole', 'transformer', 'my_footprint', 'my_component', 'testpoint']
 skip_value = ['dni', 'TRAFO-147']
 for layer_name in export_layers:

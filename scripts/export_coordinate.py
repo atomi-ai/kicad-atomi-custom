@@ -7,9 +7,19 @@ from time import time
 import sys
 from collections import defaultdict
 import platform
+from typing import List
+
 
 last_val = -1
 checked = False
+
+
+def has_substring(s: str, sub: List):
+    for i in sub:
+        if i in s:
+            return i
+
+    return None
 
 
 class KiCAD_PCB:
@@ -22,10 +32,10 @@ class KiCAD_PCB:
     def write_bom(self, bom, filename):
         with open(filename, 'w') as f:
             f.write("Comment,Designator,Footprint,Pins,Quantity\n")
-            for key, value in bom.iteritems():
+            for key, value in bom.items():
                 val, package = key
                 refs = [x[0] for x in value]
-                f.write('{},"{}",{},{},{}\n'.format(val, ','.join(refs), package, x[1], len(value)))
+                f.write('{},"{}",{},{},{}\n'.format(val, ','.join(refs), package, value[0][1], len(value)))
 
     def write_coordinate(self, coordinate, filename):
         with open(filename, 'w') as f:
@@ -53,10 +63,11 @@ class KiCAD_PCB:
                 value = attr['fp_text value'][0]
                 package = None
                 if reference[0].lower() in ['r', 'l', 'c']:
+                    #import pdb; pdb.set_trace()
                     # is resistor, capacitor or inductor
-                    footprint_suffix = footprint.split('_')[-1]
-                    if footprint_suffix in ['0402', '0603', '0805', '1206']:
-                        package = footprint_suffix
+                    footprint_suffix = has_substring(footprint, ['0402_', '0603_', '0805_', '1206_'])
+                    if footprint_suffix is not None:
+                        package = footprint_suffix[:-1]
 
                 if package:
                     coordinate.append("{ref},{footprint},{x}mm,{y}mm,{layer},{rotation}".format(
@@ -103,7 +114,7 @@ class KiCAD_PCB:
                 cur_time = time()
                 if not checked and cur_time - start_time > 3:  # takes too long, check if pypy enabled
                     if not platform.python_implementation().startswith('PyPy'):
-                        print "Parsing too slow? Consider using PyPy to accelerate the progress."
+                        print("Parsing too slow? Consider using PyPy to accelerate the progress.")
                     checked = True
                 bar.update(locn * 100 / total_len)
                 last_val = val
