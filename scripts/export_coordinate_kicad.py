@@ -1,11 +1,18 @@
 import pcbnew
+import affine6p
 from pcbnew import ToMM as ToUnit
+from pcbnew import FromMM as FromUnit
 #from pcbnew import ToMils as ToUnit
 import re
 import sys
-from collections import defaultdict
+from typing import List
+from collections import defaultdict, namedtuple
+import numpy as np
+CaliPoints = namedtuple("CaliPoints", ['po_x', 'po_y', 'pr_x', 'pr_y'])
+Point = namedtuple('Point', ['x', 'y'])
 
 board = pcbnew.LoadBoard(sys.argv[1])
+ori_x, ori_y = board.GetAuxOrigin()
 layertable = {}
 numlayers = pcbnew.PCB_LAYER_ID_COUNT
 for i in range(numlayers):
@@ -17,13 +24,14 @@ for s in [x for x in dir(pcbnew) if re.match("S_.*", x)]:
 
 export_layers={
     'F.Cu':'top',
-#    'B.Cu':'bottom'
+    'B.Cu':'bottom'
 }
 export_layer_ids = [layertable[x] for x in export_layers]
 
 bb = board.ComputeBoundingBox()
 skip_pkg = ['tht', 'conn', 'jumper', 'mountinghole', 'transformer', 'my_footprint', 'my_component', 'testpoint', 'project_footprints']
 skip_value = ['dni', 'TRAFO-147']
+
 
 def export_coordinate_ickey():
     for layer_name in export_layers:
@@ -49,16 +57,25 @@ def export_coordinate_ickey():
 
                 component_type[fp] += 1
                 print(f"{m.GetReference()}, {fp}, {m.GetValue()}, "
-                      f"{ToUnit(m.GetPosition()[0])}, {ToUnit(m.GetPosition()[1])}, {m.GetOrientationDegrees()}", file=f)
+                      f"{ToUnit(m.GetPosition()[0]-ori_x)}, {ToUnit(m.GetPosition()[1]-ori_y)}, {m.GetOrientationDegrees()}", file=f)
 
         print('#Component types:', len(component_type), file=f)
         print('#Total component number:', sum(component_type.values()), file=f)
         f.close()
 
 
-def export_coordinate_jlc():
+def export_coordinate_jlc(my_smt=False, calibration=None, delta=None, limit=None):
+    if calibration is not None:
+        datas = np.array(calibration)
+        src = datas[:, :2]
+        dst = datas[:, 2:]
+        trans = affine6p.estimate(src, dst)
+    else:
+        trans = None
+        
     for layer_name in export_layers:
         layer_id = layertable[layer_name]
+        layer_tag = export_layers[layer_name] if not my_smt else export_layers[layer_name][0].upper()
 
         f_coord = open(f"{layer_name}_coordinate.csv", 'w')
         f_bom = open(f"{layer_name}_bom.csv", 'w')
@@ -67,12 +84,15 @@ def export_coordinate_jlc():
         component_comment = defaultdict(str)
 
         print("Designator,Footprint,Qty,Comment,LCSC", file=f_bom)
-        print("Designator,Package,Val,Mid X,Mid Y,Layer,Rotation", file=f_coord)
+        if my_smt:
+            print("Designator,Footprint,Mid X,Mid Y,Ref X,Ref Y,Pad X,Pad Y, Layer,Rotation,Comment", file=f_coord)
+        else:
+            print("Designator,Package,Mid X,Mid Y,Layer,Rotation,Val", file=f_coord)
         
         for m in board.GetModules():
             if m.GetLayer() == layer_id:
                 fpid = m.GetFPID()
-                fp = f"{fpid.GetLibNickname().wx_str()}:{fpid.GetLibItemName().wx_str()}"
+                fp = f"{fpid.GetLibNickname().wx_str()}:{fpid.GetLibItemName().wx_str()}" if fpid.GetLibNickname().wx_str() else f"{fpid.GetLibItemName().wx_str()}"
                 key = f"{fp}:{m.GetValue()}"
                 if [x for x in skip_pkg if x.lower() in fp.lower()]:
                     continue
@@ -82,8 +102,21 @@ def export_coordinate_jlc():
                 component_type[key] += 1
                 component_names[key].append(m.GetReference())
                 component_comment[key] = m.GetValue()
-                print(f"{m.GetReference()}, {fp}, {m.GetValue()}, "
-                      f"{ToUnit(m.GetPosition()[0])}, {ToUnit(m.GetPosition()[1])}, {export_layers[layer_name]}, {m.GetOrientationDegrees()}", file=f_coord)
+                raw_pos_x = m.GetPosition()[0] - ori_x
+                raw_pos_y = ori_y - m.GetPosition()[1]
+                if trans:
+                    pos_x, pos_y= trans.transform((raw_pos_x, raw_pos_y))
+                else:
+                    pos_x, pos_y = raw_pos_x, raw_pos_y
+                if delta is not None:
+                    pos_x += FromUnit(delta[0])
+                    pos_y += FromUnit(delta[1])
+
+                if limit:
+                    if pos_x > FromUnit(limit[0]) or pos_y > FromUnit(limit[1]):
+                        continue
+                print(f"{m.GetReference()}, {fp}, "
+                      f"{ToUnit(int(pos_x))}, {ToUnit(int(pos_y))}, {layer_tag}, {m.GetOrientationDegrees()},{m.GetValue()}", file=f_coord)
 
         d=', '
         for k in component_type:
@@ -94,4 +127,10 @@ def export_coordinate_jlc():
 
 
 if __name__ == "__main__":
-    export_coordinate_jlc()
+    export_coordinate_jlc(my_smt=True,
+                          calibration=[CaliPoints(337.5, 342.6, 337.351, 342.224),
+                                       CaliPoints(0, 342.5, -0.302, 341.324),
+                                       CaliPoints(342.6, 0, 342.718, 1.058)],
+                          delta=(0, 0.5),
+                          limit=(335, 380),
+    )
