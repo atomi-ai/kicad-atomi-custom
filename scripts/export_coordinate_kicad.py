@@ -82,8 +82,9 @@ def export_coordinate_jlc(my_smt=False, calibration=None, delta=None, limit=None
         component_type = defaultdict(int)
         component_names = defaultdict(list)
         component_comment = defaultdict(str)
+        component_pins = defaultdict(str)
 
-        print("Designator,Footprint,Qty,Comment,LCSC", file=f_bom)
+        print("Designator,Footprint,Quantity,Comment,Pins", file=f_bom)
         if my_smt:
             print("Designator,Footprint,Mid X,Mid Y,Ref X,Ref Y,Pad X,Pad Y, Layer,Rotation,Comment", file=f_coord)
         else:
@@ -102,25 +103,36 @@ def export_coordinate_jlc(my_smt=False, calibration=None, delta=None, limit=None
                 component_type[key] += 1
                 component_names[key].append(m.GetReference())
                 component_comment[key] = m.GetValue()
+                component_pins[key] = m.GetPadCount() 
                 raw_pos_x = m.GetPosition()[0] - ori_x
                 raw_pos_y = ori_y - m.GetPosition()[1]
+                first_pad = m.Pads().GetFirst()
+                raw_pad_x = first_pad.GetPosition()[0] - ori_x
+                raw_pad_y = ori_y - first_pad.GetPosition()[1]
                 if trans:
                     pos_x, pos_y= trans.transform((raw_pos_x, raw_pos_y))
+                    pad_x, pad_y = trans.transform((raw_pad_x, raw_pad_y))
                 else:
                     pos_x, pos_y = raw_pos_x, raw_pos_y
+                    pad_x, pad_y = raw_pad_x, raw_pad_y
                 if delta is not None:
                     pos_x += FromUnit(delta[0])
                     pos_y += FromUnit(delta[1])
+                    pad_x += FromUnit(delta[0])
+                    pad_y += FromUnit(delta[1])
 
                 if limit:
                     if pos_x > FromUnit(limit[0]) or pos_y > FromUnit(limit[1]):
                         continue
-                print(f"{m.GetReference()}, {fp}, "
-                      f"{ToUnit(int(pos_x))}, {ToUnit(int(pos_y))}, {layer_tag}, {m.GetOrientationDegrees()},{m.GetValue()}", file=f_coord)
+                print(f'"{m.GetReference()}", "{fp}", '
+                      f'"{ToUnit(int(pos_x))}mm", "{ToUnit(int(pos_y))}mm",'        # Mid
+                      f'"{ToUnit(int(pos_x))}mm", "{ToUnit(int(pos_y))}mm",'        # Ref
+                      f'"{ToUnit(int(pad_x))}mm", "{ToUnit(int(pad_y))}mm",'        # Pad
+                      f'"{layer_tag}", "{m.GetOrientationDegrees()}", "{m.GetValue()}"', file=f_coord)
 
         d=', '
         for k in component_type:
-            print(f'"{d.join(component_names[k])}", {k}, {component_type[k]}, {component_comment[k]},', file=f_bom)
+            print(f'"{d.join(component_names[k])}", {k}, {component_type[k]}, {component_comment[k]},{component_pins[k]}', file=f_bom)
 
         f_bom.close()
         f_coord.close()
@@ -128,9 +140,9 @@ def export_coordinate_jlc(my_smt=False, calibration=None, delta=None, limit=None
 
 if __name__ == "__main__":
     export_coordinate_jlc(my_smt=True,
-                          calibration=[CaliPoints(337.5, 342.6, 337.351, 342.224),
-                                       CaliPoints(0, 342.5, -0.302, 341.324),
-                                       CaliPoints(342.6, 0, 342.718, 1.058)],
-                          delta=(0, 0.5),
-                          limit=(335, 380),
+                          # calibration=[CaliPoints(337.5, 342.6, 337.351, 342.224),
+                          #              CaliPoints(0, 342.5, -0.302, 341.324),
+                          #              CaliPoints(342.6, 0, 342.718, 1.058)],
+                          # delta=(0, 0.5),
+                          # limit=(335, 380),
     )
