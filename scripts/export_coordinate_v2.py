@@ -122,7 +122,8 @@ class KicadBoard:
         while seq:
             value, idx = sorted([(distance(nullable_key(current), nullable_key(x)), n) for n, x in enumerate(seq)],
                                 key=lambda x:x[0])[0]
-            result.append(seq.pop(idx))
+            current = seq.pop(idx)
+            result.append(current)
         return result
 
 
@@ -144,13 +145,18 @@ def export_drill_gcode():
 
     board = KicadBoard(args.kicad_pcb_filename)
     if args.drill is not None:
-        with open(append_suffix(args.drill[0], 'gcode'), 'w') as f:
+        export_fn = append_suffix(args.drill[0], 'nc')
+        with open(export_fn, 'w') as f:
             f.write(f'''; exported by {sys.argv[0]}
 ; original pcb filename: {args.kicad_pcb_filename}
 ; exported date:{datetime.now()}
-G53 G90 G80 G00
+G90 G80 G17 G40 G00
+G54 G90 S8000 M03 
+G04 P5
+; G69
+; G68 X0 Y0 R10
 Z50
-M3 S8000
+
 ''')
             drills = list(chain(board.iter_pad(), board.iter_via()))
             # group by drill size
@@ -158,19 +164,25 @@ M3 S8000
         
             gid = 1
             for k, g in groupby(drills, key=lambda x: x.size):
-                f.write(f'T{gid} C{k}\n')
+                if gid != 1:    # pause spindle
+                    f.write(f'G00 Z50 M05\nM01\n')
+                f.write(f'T{gid} (C{k}) M06\n')
+                if gid != 1:    # restart spindle
+                    f.write(f'M03\nG04 P5\n')
+
                 gid += 1
                 ordered_drills = board.nearby_sort(list(g), key=lambda x:(x.x, x.y))
                 first = True
             
                 for d in ordered_drills:
                     if first:
-                        f.write(f'X{d.x} Y{d.y} Z4\nG81 R4 Z-1\n')
+                        f.write(f'X{d.x} Y{d.y} Z4\nG81 R4 Z-1 F80\n')
                         first = False
                     else:
                         f.write(f'X{d.x} Y{d.y}\n')
                 f.write(f'G80\n')
             f.write(f'M5\n')
+        os.system(f"unix2dos {export_fn}")
 
 
 if __name__ == "__main__":
