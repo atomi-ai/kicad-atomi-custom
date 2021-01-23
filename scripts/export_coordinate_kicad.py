@@ -24,7 +24,7 @@ for s in [x for x in dir(pcbnew) if re.match("S_.*", x)]:
 
 export_layers={
     'F.Cu':'top',
-    'B.Cu':'bottom'
+#    'B.Cu':'bottom'
 }
 export_layer_ids = [layertable[x] for x in export_layers]
 
@@ -34,6 +34,7 @@ skip_value = ['dni', 'TRAFO-147']
 
 
 def export_coordinate_ickey():
+    total_pads = 0
     for layer_name in export_layers:
         layer_id = layertable[layer_name]
 
@@ -55,12 +56,14 @@ def export_coordinate_ickey():
                 if [x for x in skip_value if x.lower() in m.GetValue().lower()]:
                     continue
 
+                total_pads += m.GetPadCount() 
                 component_type[fp] += 1
                 print(f"{m.GetReference()}, {fp}, {m.GetValue()}, "
                       f"{ToUnit(m.GetPosition()[0]-ori_x)}, {ToUnit(m.GetPosition()[1]-ori_y)}, {m.GetOrientationDegrees()}", file=f)
 
         print('#Component types:', len(component_type), file=f)
         print('#Total component number:', sum(component_type.values()), file=f)
+        print('#Total pads number:', total_pads, file=f)
         f.close()
 
 
@@ -139,7 +142,7 @@ def export_coordinate_jlc(my_smt=False, calibration=None, delta=None, limit=None
 
 
 if __name__ == "__main__":
-    export_coordinate_jlc(my_smt=True,
+    export_coordinate_ickey(#my_smt=True,
                           # calibration=[CaliPoints(337.5, 342.6, 337.351, 342.224),
                           #              CaliPoints(0, 342.5, -0.302, 341.324),
                           #              CaliPoints(342.6, 0, 342.718, 1.058)],
