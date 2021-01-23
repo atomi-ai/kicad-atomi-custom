@@ -142,7 +142,8 @@ def export_coordinate_jlc(my_smt=False, calibration=None, delta=None, limit=None
 
 
 if __name__ == "__main__":
-    export_coordinate_ickey(#my_smt=True,
+    #export_coordinate_ickey(#my_smt=True,
+    export_coordinate_jlc(#my_smt=True,
                           # calibration=[CaliPoints(337.5, 342.6, 337.351, 342.224),
                           #              CaliPoints(0, 342.5, -0.302, 341.324),
                           #              CaliPoints(342.6, 0, 342.718, 1.058)],
