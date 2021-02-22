@@ -50,6 +50,11 @@ $CMP AD5541
 D 2.7 V to 5.5 V, Serial-Input,
 $ENDCMP
 #
+$CMP DRV201
+D Voice Coil Motor Driver for Camera Auto Focus
+K VCM
+$ENDCMP
+#
 $CMP G2R-1-E
 D Omron G2R relay, Miniature Single Pole, SPDT, 16A
 K Miniature Single Pole Relay
@@ -70,6 +75,11 @@ $ENDCMP
 #
 $CMP LTC2400
 D 24-Bit µPower
+$ENDCMP
+#
+$CMP LV8498CT
+D For VCMS constant-current Driver IC
+K VCM
 $ENDCMP
 #
 $CMP MAX6610AUT
