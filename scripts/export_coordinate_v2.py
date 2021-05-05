@@ -4,14 +4,20 @@ from pcbnew import FromMM as FromUnit
 from typing import List, Tuple
 import math
 import argparse
-import re, sys
+import regex, sys
 import os.path
 from collections import defaultdict, namedtuple
 from itertools import chain, groupby
 from datetime import datetime
+from math import sqrt
+import ezdxf
+from shapely.geometry import Polygon, MultiPolygon, MultiLineString
+from shapely.affinity import rotate
+
 
 Part = namedtuple('Part', ['ref', 'footprint', 'value', 'mid_x', 'mid_y', 'ref_x', 'ref_y', 'pad_x', 'pad_y', 'layer', 'rotation', 'pad_count'])
 DrillHole = namedtuple('Drill', ['x', 'y', 'size', 'plate'])
+Pad = namedtuple('Pad', ['shape_pts', 'layer'])
 
 
 class SMT_ABS_CONF:
@@ -124,6 +130,10 @@ class SMT_MYSMT_CONF(SMT_ABS_CONF):
                                      }):
         super().renaming(name_mapping)
 
+
+class LASER_CONF:
+    laser_point_dia = 0.025
+        
 class KicadBoard:
     def __init__(self, board_file_name: str,
                  skip_bottom: bool = False,
@@ -138,7 +148,7 @@ class KicadBoard:
             self.layertable[self.board.GetLayerName(i)] = i
 
         self.shape_table = {}
-        for s in [x for x in dir(pcbnew) if re.match("S_.*", x)]:
+        for s in [x for x in dir(pcbnew) if regex.match("S_.*", x)]:
             self.shape_table[getattr(pcbnew, s)] = s
 
         self.export_layers={
@@ -197,7 +207,7 @@ class KicadBoard:
                                 pad_count=m.GetPadCount())
                     yield part
 
-    def iter_via(self):
+    def iter_drill_via(self):
         for t in self.board.GetTracks():
             if t.GetClass() == 'VIA': # is via
                 via_x, via_y = self.convert_coord(t.GetPosition())
@@ -205,7 +215,7 @@ class KicadBoard:
                 via = DrillHole(via_x, via_y, via_drill, True)
                 yield via
 
-    def iter_pad(self):
+    def iter_drill_pad(self):
         for p in self.board.GetPads():
             if p.GetDrillShape() == pcbnew.PAD_DRILL_SHAPE_CIRCLE:
                 drill_size = ToUnit(p.GetDrillSize()[0])
@@ -214,6 +224,23 @@ class KicadBoard:
                     plated = pcbnew.PAD_ATTRIB_NPTH
                     drill = DrillHole(drill_x, drill_y, drill_size, p.GetAttribute() != plated)
                     yield drill
+
+    def get_pts(self, polygon):
+        pts_str = polygon.Format().split('\n')
+        assert 'SHAPE_LINE_CHAIN' in pts_str[0], "UNKNOWN PTS FORMAT:{}".format(pts_str)
+        pts_str = pts_str[1].strip().replace(' ', '')
+        m = regex.match('{autotmp=SHAPE_LINE_CHAIN[{\(]+(?:VECTOR2I\((\d+,\d+)\),?)+},true.*$', pts_str)
+        vec_pts = [self.convert_coord([int(y) for y in x.split(',')]) for x in m.captures(1)]
+        return vec_pts
+
+    def iter_paste_pad(self, layer=['top', 'bottom']):
+        for p in self.board.GetPads():
+            if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD:
+                continue
+            pts = self.get_pts(p.GetEffectivePolygon())
+            _layer = self.export_layers[p.GetParent().GetLayerName()]
+            if _layer in layer:
+                yield Pad(pts, _layer)
 
     def convert_coord(self, p):
         x = ToUnit(int(p[0] - self.ori_x))
@@ -266,7 +293,7 @@ G04 P5
 Z50
 
 ''')
-        drills = list(chain(board.iter_pad(), board.iter_via()))
+        drills = list(chain(board.iter_drill_pad(), board.iter_drill_via()))
         # group by drill size
         drills.sort(key=lambda x: x.size)
 
@@ -322,6 +349,116 @@ def dispatch_smt(out_fn, pcb_fn, export_conf):
     print(f'#Total component number:{sum(component_type.values())}')
     print(f'#Total pads number:{total_pads}')
 
+def fill_with_lines(area, msp, conf):
+    distance = conf.laser_point_dia*2
+    
+    if not area.is_valid:
+        area = area.buffer(0)
+
+    area.buffer(-conf.laser_point_dia)
+    
+    while area.area > 0:
+        if type(area) is MultiPolygon:
+            gems = area.geoms
+        else:
+            gems = [area]
+
+        for gem in gems:
+            npts = list(gem.exterior.coords)
+            msp.add_polyline2d(npts)
+
+        area = area.buffer(-distance)
+        
+def hatchbox(rect, angle, spacing):
+    """
+    returns a Shapely geometry (MULTILINESTRING, or more rarely,
+    GEOMETRYCOLLECTION) for a simple hatched rectangle.
+
+    args:
+    rect - a Shapely geometry for the outer boundary of the hatch
+           Likely most useful if it really is a rectangle
+
+    angle - angle of hatch lines, conventional anticlockwise -ve
+
+    spacing - spacing between hatch lines
+
+    GEOMETRYCOLLECTION case occurs when a hatch line intersects with
+    the corner of the clipping rectangle, which produces a point
+    along with the usual lines.
+    """
+
+    (llx, lly, urx, ury) = rect.bounds
+    centre_x = (urx + llx) / 2
+    centre_y = (ury + lly) / 2
+    diagonal_length = sqrt((urx - llx) ** 2 + (ury - lly) ** 2)
+    number_of_lines = 2 + int(diagonal_length / spacing)
+    hatch_length = spacing * (number_of_lines - 1)
+
+    # build a square (of side hatch_length) horizontal lines
+    # centred on centroid of the bounding box, 'spacing' units apart
+    coords = []
+    for i in range(number_of_lines):
+        # alternate lines l2r and r2l to keep HP-7470A plotter happy ☺
+        if i % 2:
+            coords.extend([((centre_x - hatch_length / 2, centre_y
+                          - hatch_length / 2 + i * spacing), (centre_x
+                          + hatch_length / 2, centre_y - hatch_length
+                          / 2 + i * spacing))])
+        else:
+            coords.extend([((centre_x + hatch_length / 2, centre_y
+                          - hatch_length / 2 + i * spacing), (centre_x
+                          - hatch_length / 2, centre_y - hatch_length
+                          / 2 + i * spacing))])
+    # turn array into Shapely object
+    lines = MultiLineString(coords)
+    # Rotate by angle around box centre
+    lines = rotate(lines, angle, origin='centroid', use_radians=False)
+    # return clipped array
+    return rect.intersection(lines)
+
+def fill_with_hatch(area, msp, conf):
+    distance = conf.laser_point_dia*2
+    
+    if not area.is_valid:
+        area = area.buffer(0)
+
+    area.buffer(-conf.laser_point_dia)
+
+    hatch1 = hatchbox(area, 45, distance)
+    hatch2 = hatchbox(area, -45, distance)
+    lines1 = area.intersection(hatch1)
+    lines2 = area.intersection(hatch2)
+
+    if type(area) is MultiPolygon:
+        gems = area.geoms
+    else:
+        gems = [area]
+
+    # draw borders
+    for gem in gems:
+        npts = list(gem.exterior.coords)
+        msp.add_polyline2d(npts)
+
+    # draw hatch lines:
+    for line in chain(lines1.geoms, lines2.geoms):
+        msp.add_line(*line.coords)
+
+    
+def dispatch_paste(out_fn, pcb_fn, conf):
+    board = KicadBoard(pcb_fn)
+    doc = ezdxf.new('R2000')
+    msp = doc.modelspace()  # add new entities to the modelspace
+
+    mp = MultiPolygon([Polygon(pad.shape_pts  + [pad.shape_pts[0]]) for pad in board.iter_paste_pad(['top'])])
+    #fill_with_lines(mp, msp, conf)
+    fill_with_hatch(mp, msp, conf)
+    # for pad in board.iter_paste_pad(['top']):
+    #     fill_with_lines(pad.shape_pts, msp, conf)
+        #msp.add_lwpolyline(pad.shape_pts + [pad.shape_pts[0]])
+
+    doc.saveas(f"{out_fn}.dxf")
+    
+
 def export_main():
     parser = argparse.ArgumentParser(description='export kicad pcb board component values')
     parser.add_argument('kicad_pcb_filename')
@@ -329,6 +466,7 @@ def export_main():
     parser.add_argument('--ickey', nargs=1, help='export_ickey_name')
     parser.add_argument('--mysmt', nargs=1, help='export_mysmt_name')
     parser.add_argument('--drill', nargs=1, help='export_drill_name')
+    parser.add_argument('--laser', nargs=1, help='export paste mask for lasering')
     args = parser.parse_args()
 
     if args.drill is not None:
@@ -339,6 +477,8 @@ def export_main():
         dispatch_smt(args.ickey[0], args.kicad_pcb_filename, SMT_ICKEY_CONF())
     if args.mysmt is not None:
         dispatch_smt(args.mysmt[0], args.kicad_pcb_filename, SMT_MYSMT_CONF())
+    if args.laser is not None:
+        dispatch_paste(args.laser[0], args.kicad_pcb_filename, LASER_CONF())
 
 if __name__ == "__main__":
     export_main()
