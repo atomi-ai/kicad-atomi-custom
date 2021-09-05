@@ -1,5 +1,4 @@
 import pcbnew
-import affine6p
 from pcbnew import ToMM as ToUnit
 from pcbnew import FromMM as FromUnit
 #from pcbnew import ToMils as ToUnit
@@ -69,6 +68,7 @@ def export_coordinate_ickey():
 
 def export_coordinate_jlc(my_smt=False, calibration=None, delta=None, limit=None):
     if calibration is not None:
+        import affine6p
         datas = np.array(calibration)
         src = datas[:, :2]
         dst = datas[:, 2:]
