@@ -1,5 +1,5 @@
 (footprint "EX141V-2.54-4P" (version 20210424) (generator pcbnew) (layer "F.Cu")
-  (tedit 613708B6)
+  (tedit 614C56B3)
   (fp_text reference "REF**" (at 2.54 2 unlocked) (layer "F.SilkS")
     (effects (font (size 1 1) (thickness 0.15)))
     (tstamp 71e78af9-7c85-4a16-95e8-6e77cf1f39db)
@@ -22,4 +22,9 @@
   (pad "3" thru_hole circle (at 5.08 0) (size 2 2) (drill 1.3) (layers *.Cu *.Mask) (tstamp d454ad73-e091-4759-b965-78cce6152815))
   (pad "4" thru_hole circle (at 7.62 0) (size 2 2) (drill 1.3) (layers *.Cu *.Mask) (tstamp 1fde89b4-1125-4175-95e3-8dbd1ef8a40a))
   (pad "4" thru_hole circle (at 7.62 -5.08) (size 2 2) (drill 1.3) (layers *.Cu *.Mask) (tstamp cfbd2d4b-bbfd-47c6-82c0-b69979e1aa96))
+  (model "${KICAD_MYLIB}/myworks/package/ex141v-254-4p.step"
+    (offset (xyz 5.05 2.6 0))
+    (scale (xyz 1 1 1))
+    (rotate (xyz 0 0 0))
+  )
 )
