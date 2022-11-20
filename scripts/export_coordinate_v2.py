@@ -140,7 +140,7 @@ class KicadBoard:
                  skip_package = ['tht', 'conn', 'jumper', 'mountinghole', 'transformer', 'my_footprint', 'my_component', 'testpoint', 'project_footprints'],
                  skip_value = ['dni']):
         self.board = pcbnew.LoadBoard(board_file_name)
-        self.ori_x, self.ori_y = self.board.GetDesignSettings().m_AuxOrigin
+        self.ori_x, self.ori_y = self.board.GetDesignSettings().GetAuxOrigin()
         self.layertable = {}
         numlayers = pcbnew.PCB_LAYER_ID_COUNT
 
