@@ -190,7 +190,10 @@ class KicadBoard:
                     component_pins[key] = m.GetPadCount()
                     pos_x, pos_y = self.convert_coord(m.GetPosition())
                     pad = m.Pads()
-                    first_pad = m.Pads()[0]
+                    try:
+                        first_pad = m.Pads()[0]
+                    except IndexError:
+                        continue
                     pad_x, pad_y = self.convert_coord(first_pad.GetPosition())
 
                     part = Part(ref=m.GetReference(),
